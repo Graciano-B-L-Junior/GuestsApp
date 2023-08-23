@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_all_guests">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.guestsapp.ui.PresentsFragment"
-        android:label="@string/menu_all_guests"
-        tools:layout="@layout/fragment_presents" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_all_guests"
         android:name="com.example.guestsapp.ui.AllGuestFragment"
-        android:label="@string/menu_presents"
+        android:label="@string/menu_all_guests"
         tools:layout="@layout/fragment_all_guests" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
+        android:id="@+id/nav_presents"
+        android:name="com.example.guestsapp.ui.PresentsFragment"
+        android:label="@string/menu_presents"
+        tools:layout="@layout/fragment_presents" />
+
+    <fragment
+        android:id="@+id/nav_absents"
         android:name="com.example.guestsapp.ui.AbsentsFragment"
         android:label="@string/menu_absents"
         tools:layout="@layout/fragment_absents" />

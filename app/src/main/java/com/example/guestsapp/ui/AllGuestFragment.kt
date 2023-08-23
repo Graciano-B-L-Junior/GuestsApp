@@ -1,18 +1,27 @@
 package com.example.guestsapp.ui
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.guestsapp.GuestFormActivity
+import com.example.guestsapp.Guests.Guest
+import com.example.guestsapp.Guests.GuestListener
 import com.example.guestsapp.databinding.FragmentAllGuestsBinding
+import com.example.guestsapp.recyclerview.GuestAdapter
 
 class AllGuestFragment : Fragment() {
 
     private var _binding: FragmentAllGuestsBinding? = null
-
+    private lateinit var viewModel: AllGuestsViewModel
+    private var adapter: GuestAdapter = GuestAdapter()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -22,17 +31,57 @@ class AllGuestFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
+        viewModel =
             ViewModelProvider(this).get(AllGuestsViewModel::class.java)
 
         _binding = FragmentAllGuestsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+
+        binding.recylerView.layoutManager = LinearLayoutManager(context)
+        binding.recylerView.adapter = adapter
+
+        val listener = object:GuestListener{
+
+            override fun onclick(guest: Guest) {
+                var name = guest.name
+                var presence = guest.presence
+                var id = guest.id
+                var intent = Intent(context,GuestFormActivity::class.java)
+                intent.putExtras(Bundle().apply {
+                    putString("name",name)
+                    putInt("id",id)
+                    putBoolean("presence",presence)
+                })
+                startActivity(intent)
+            }
+
+            override fun onLongClick(guest: Guest) {
+                var dialogBuilder = AlertDialog.Builder(context)
+                dialogBuilder.setTitle("Removing guest")
+                dialogBuilder.setMessage("Do you want delete this guest?")
+                dialogBuilder.setNegativeButton("No",DialogInterface.OnClickListener{
+                    dialogInterface, i -> dialogInterface.dismiss()
+
+                })
+                dialogBuilder.setPositiveButton("Yes",DialogInterface.OnClickListener{
+                    dialogInterface, i -> viewModel.removeGuest(guest)
+                    dialogInterface.dismiss()
+                })
+                dialogBuilder.create()
+                dialogBuilder.show()
+            }
+
         }
-        return root
+        viewModel.allguests.observe(this) {
+            adapter.updateGuestList(it,listener)
+        }
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllGuests()
     }
 
     override fun onDestroyView() {
