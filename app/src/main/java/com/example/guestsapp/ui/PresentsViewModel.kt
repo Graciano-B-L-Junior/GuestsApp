@@ -10,15 +10,15 @@ import com.example.guestsapp.repository.GuestRepository
 
 class PresentsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var repository = GuestRepository.getInstance(application.applicationContext)
+    private var repository = GuestRepository(application.applicationContext)
     private var _guest = MutableLiveData<List<Guest>>()
     val guest: LiveData<List<Guest>> = _guest
 
     fun getAll(){
-        _guest.value = repository.getAllPresents()
+        _guest.value = repository.getPresents()
     }
     fun removeGuest(guest:Guest){
-        repository.removeGuest(guest)
+        repository.delete(guest.id)
         getAll()
     }
 }

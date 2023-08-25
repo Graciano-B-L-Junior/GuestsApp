@@ -1,4 +1,12 @@
 package com.example.guestsapp.Guests
 
-data class Guest(val id:Int, var name:String, var presence:Boolean) {
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class Guest(
+    @PrimaryKey(autoGenerate = true) val id:Int,
+    @ColumnInfo(name = "name") var name:String,
+    @ColumnInfo(name = "presence") var presence:Boolean) {
 }

@@ -11,7 +11,6 @@ import com.example.guestsapp.repository.GuestRepository
 class GuestFormActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var binding: ActivityGuestFormBinding
     private lateinit var viewModel: GuestFormViewModel
-    private lateinit var repository: GuestRepository
     private var guestId=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +28,10 @@ class GuestFormActivity : AppCompatActivity(),View.OnClickListener {
             guestId=guest.id
             viewModel.current_guest(guest)
         }
-        repository = GuestRepository.getInstance(this)
+        binding.radioPresent.isChecked=true
         observe()
         binding.btnSave.setOnClickListener(this)
+
     }
     private fun observe(){
         viewModel.guest.observe(this){
